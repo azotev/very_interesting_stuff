@@ -1,24 +1,35 @@
 #!/usr/bin/env python3
 
-from typing import List
+from typing import List, Tuple
 from utils.resolution import Resolution
 from utils.pixel import Pixel
 from enum import Enum
+
 
 class ImageType(Enum):
     PackedImageType = 0
     StrideImageType = 1
 
+
 class PackedImage:
     def __init__(self, resolution: Resolution, pixels: List[Pixel]):
         self.resolution: Resolution = resolution
         self.pixels: List[Pixel] = pixels
-    
-    def __str__ (self):
+
+    def get_xy_pixel(self, coords: Tuple[int, int]) -> Pixel:
+        x, y = coords
+        return self.pixels[x * self.resolution.width + y]
+
+    def set_xy_pixel(self, coords: Tuple[int, int], value: int = 150):
+        x, y = coords
+        self.pixels[x * self.resolution.width + y].red -= value
+
+    def __str__(self):
         return str(self.resolution) + '\n' + ' '.join(str(p) for p in self.pixels)
 
     def __eq__(self, other):
         return self.resolution == other.resolution and self.pixels == other.pixels
+
 
 class StrideImage:
     def __init__(self, resolution: Resolution, pixels: List[Pixel]):
@@ -48,7 +59,7 @@ class StrideImage:
             self.pixels_blue.append(pixel.blue)
             self.pixels_alpha.append(pixel.alpha)
     
-    def __str__ (self):
+    def __str__(self):
         return str(self.resolution) + '\n' + \
             ' '.join(str(p) for p in self.pixels_red) + \
             ' '.join(str(p) for p in self.pixels_green) + \
@@ -62,8 +73,10 @@ class StrideImage:
             self.pixels_blue == other.pixels_blue and \
             self.pixels_alpha == other.pixels_alpha
 
+
 def to_stride_image(image: PackedImage) -> StrideImage:
     return StrideImage(image.resolution, image.pixels)
+
 
 def to_image(stride_image: StrideImage) -> PackedImage:
     return PackedImage(stride_image.resolution, stride_image.merge_pixel_components())

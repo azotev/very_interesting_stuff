@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from typing import List
+
 import utils.file_parser as fp
 from utils.image import (
     StrideImage,
@@ -11,8 +12,8 @@ from solution import compute_solution
 
 def main():  # pylint: disable=missing-function-docstring
     #Use the provided implementation that best suits your needs
-    #image_type: fp.ImageType = fp.ImageType.PackedImageType
-    image_type: fp.ImageType = fp.ImageType.StrideImageType
+    image_type: fp.ImageType = fp.ImageType.PackedImageType
+    # image_type: fp.ImageType = fp.ImageType.StrideImageType
     
     input_file_name = "input.bin"
     output_file_name = "output.bin"
